@@ -54,7 +54,7 @@ def load_matrice(file, input, output, sep):
 
 
 Xtrain, Ytrain, dictionary = load_matrice('dataset/training_tweet.csv', 'Tweets', 'sentiment', '\t')
-theta_1g = np.zeros((len(Xtrain[0]), 1))
+theta_g = np.zeros((len(Xtrain[0]), 1))
 alpha = 0.1
 iterations = 100
 theta = train(theta_g, Xtrain, Ytrain, alpha, iterations)
