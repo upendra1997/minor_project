@@ -52,7 +52,7 @@ def load_matrice(file, input, output, sep):
 
 
 def train(theta, X, Y, alpha, loop):
-    c = cost(theta, X, Y)
+    c = cost(predict(theta, X), Y)
     print("Initial Cost: ", c)
     for i in range(loop):
         theta, c = gradient_descent(theta, X, Y, alpha)
