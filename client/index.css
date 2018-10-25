@@ -1,0 +1,38 @@
+body {
+    padding: 25px;
+    background-repeat: no-repeat;
+    /*background-size: 1400px 1000px;*/
+    background: #4ecdc4; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #4ecdc4, #556270); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #4ecdc4, #556270); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /*background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);*/
+}
+
+h1{
+    font-size: 70px;
+    text-align: center;
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+}
+
+button {
+    border: none;
+    text-align: center;
+    text-decoration: None;
+    display: inline-block;
+    cursor: pointer;
+    font-size: large;
+}
+
+button {
+    border-radius: 8px;
+}
+
+textarea {
+    font-size: xx-large;
+     border-radius: 10px;
+}
+
+#result {
+    border-radius: 10px;
+    padding: 10px;
+}

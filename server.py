@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect
 from analyzer import analyze
 import os
 
@@ -10,20 +10,19 @@ port = 8080
 if "PORT" in os.environ.keys():
     port = os.environ["PORT"]
 
-
-
-app = Flask(__name__,static_url_path = "/front-end")
+app = Flask(__name__,static_folder="./client/",static_url_path='')
 
 object = analyze()
 
 @app.route('/',methods=["GET"])
-def front_end():
-    print("hit")
-    print(app.send_static_file('/front-end/front-end.html'))
-    return app.send_static_file('/front-end/front-end.html')
+def main_page():
+    return redirect('index.html')
 
-@app.route('/<text>',methods=["POST"])
+@app.route('/text/<text>',methods=["GET"])
 def sentiment_analyze(text):
+    print(text)
+    if len(text)==0:
+        return str(0)
     result = object.input(text)
     print(text,result)
     return str(result)
