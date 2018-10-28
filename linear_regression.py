@@ -1,3 +1,4 @@
+#!/usr/bin/py -3
 """Logisitic Regression by Upendra Upadhyay"""
 
 import numpy as np

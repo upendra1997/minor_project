@@ -1,8 +1,9 @@
+#!/usr/bin/py -3
 """Logistic Regression by Upendra Upadhyay."""
 
 import numpy as np
 import pandas as pd
-
+import pickle
 
 def sigmoid(t):
     return 1 / (1 + np.exp(-t))
@@ -69,28 +70,39 @@ def test(pred, Y):
     return mse(pre, Y)
 
 
-Xtrain, Ytrain, dictionary = load_matrice('dataset/training_news.csv', 'title', 'sentiment', '\t')
-theta_g = np.zeros((len(Xtrain[0]), 1))
-alpha = 0.1
-iterations = 100
-theta = train(theta_g, Xtrain, Ytrain, alpha, iterations)
-theta_ne = normal_equation(theta, Xtrain, Ytrain)
-temp1, Ytest, temp = load_matrice('dataset/testing_news.csv', 'title', 'sentiment score', '\t')
-del temp
-del temp1
-DF = pd.read_csv('dataset/testing_news.csv', '\t')
-i = 0
-Xtest = np.ndarray((len(Ytest), len(dictionary) + 1))
-for line in DF['title']:
-    for word in line.split(' '):
-        Xtest[i, ...] = 0
-        Xtest[i][0] = 1
-        try:
-            index = list(dictionary.keys()).index(word)
-            Xtest[i][1 + index] = 1
-        except ValueError:
-            pass
-    i += 1
-print("Mean Square Error by gradient descent with learning rate ", alpha, " and iterations ", iterations, " is ",
-      mse(predict(theta, Xtest), Ytest))
-print("error rate by normal equation ", mse(predict(theta_ne, Xtest), Ytest))
+if __name__ == '__main__':
+    Xtrain, Ytrain, dictionary = load_matrice('dataset/training_news.csv', 'title', 'sentiment', '\t')
+    theta_g = np.zeros((len(Xtrain[0]), 1))
+    alpha = 0.1
+    iterations = 100
+    theta = train(theta_g, Xtrain, Ytrain, alpha, iterations)
+    # theta_ne = normal_equation(theta, Xtrain, Ytrain)
+    temp1, Ytest, temp = load_matrice('dataset/testing_news.csv', 'title', 'sentiment score', '\t')
+    del temp
+    del temp1
+    DF = pd.read_csv('dataset/testing_news.csv', '\t')
+    i = 0
+    Xtest = np.ndarray((len(Ytest), len(dictionary) + 1))
+    for line in DF['title']:
+        for word in line.split(' '):
+            Xtest[i, ...] = 0
+            Xtest[i][0] = 1
+            try:
+                index = list(dictionary.keys()).index(word)
+                Xtest[i][1 + index] = 1
+            except ValueError:
+                pass
+        i += 1
+
+    predictedY = predict(theta, Xtest)
+    # predictedY_ne = predict(normal_equation(Xtrain, Ytrain), Xtest)
+    f = open("weight",'wb')
+    f.write(pickle.dumps(theta))
+    f.close()
+    f = open("dict",'wb')
+    f.write(pickle.dumps(dictionary))
+    f.close()
+
+    print("Mean Square Error by gradient descent with learning rate ", alpha, " and iterations ", iterations, " is ",
+          mse(predictedY, Ytest))
+    # print("error rate by normal equation ", mse(predict(theta_ne, Xtest), Ytest))
