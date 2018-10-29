@@ -4,6 +4,27 @@
 import numpy as np
 import pandas as pd
 import pickle
+import string
+import nltk
+# nltk.download()
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+
+porter = PorterStemmer()
+set_stop_words = set(stopwords.words('english'))
+table = str.maketrans('','',string.punctuation)
+
+def clean(line):
+    for word in word_tokenize(line):
+        word = word.lower().translate(table)
+        if not word.isalpha():
+            continue
+        if word in set_stop_words:
+            continue
+        word = porter.stem(word)
+        yield word
+
 
 def sigmoid(t):
     return 1 / (1 + np.exp(-t))
@@ -37,12 +58,12 @@ def load_matrice(file, input, output, sep):
     dictionary = {}
     DF = pd.read_csv(file, sep)
     for line in DF[input]:
-        for word in line.split(' '):
+        for word in clean(line):
             dictionary[word] = 1
     X = np.ndarray((len(DF[input]), len(dictionary.keys()) + 1))
     i = 0
     for line in DF[input]:
-        for word in line.split(' '):
+        for word in clean(line):
             X[i][1 + list(dictionary.keys()).index(word)] = 1
         i += 1
     X[..., 0] = np.ones((1, len(DF[input])))
@@ -72,9 +93,9 @@ def test(pred, Y):
 
 if __name__ == '__main__':
     Xtrain, Ytrain, dictionary = load_matrice('dataset/training_news.csv', 'title', 'sentiment', '\t')
-    theta_g = np.zeros((len(Xtrain[0]), 1))
-    alpha = 0.1
-    iterations = 100
+    theta_g = np.random.uniform(size=(len(Xtrain[0]), 1))
+    alpha = 0.01
+    iterations = 1000
     theta = train(theta_g, Xtrain, Ytrain, alpha, iterations)
     # theta_ne = normal_equation(theta, Xtrain, Ytrain)
     temp1, Ytest, temp = load_matrice('dataset/testing_news.csv', 'title', 'sentiment score', '\t')
@@ -84,7 +105,7 @@ if __name__ == '__main__':
     i = 0
     Xtest = np.ndarray((len(Ytest), len(dictionary) + 1))
     for line in DF['title']:
-        for word in line.split(' '):
+        for word in clean(line):
             Xtest[i, ...] = 0
             Xtest[i][0] = 1
             try:

@@ -12,18 +12,21 @@ function clicked(event){
             var result = parseFloat(req.responseText);
             var color = "lightgray";
             var element = document.getElementById('result');
-            if(result > 0){
+            if(result > 0.5+1e-9){
+                result = result - 0.5;
                 color = "lightgreen";
             }
-            else if(result < 0){
-                result*=-1;
+            else if(result < 0.5-1e-9){
+                result = 0.5 - result;
                 color="lightsalmon";
+            }
+            else{
+                result = 0.00;
             }
             element.innerText = result.toFixed(2);
             element.style.backgroundColor = color;
         }
     }
-    console.log("asdasd");
     req.open("GET",'/text/'+text);
     req.send();
 
